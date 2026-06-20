@@ -1,6 +1,7 @@
-import streamlit as st
+import streamlit
 import pandas as pd
 import random
+import openpyxl
 
 st.set_page_config(page_title="🐻곰탱이볼링클럽🎳", layout="wide")
 
