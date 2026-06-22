@@ -50,17 +50,17 @@ if score_file and attend_file:
             target_size = len(attendees) // num_teams 
             
             if remainder != 0:
-                attendees = attendees.sort_values(by='적용에버', ascending=True)
+                attendees = attendees.sort_values(by='평균에버', ascending=True)
                 excluded_people = attendees.iloc[:remainder]
                 st.warning(f"각 팀 인원을 {target_size}명으로 맞추기 위해 가장 점수가 낮은 {remainder}명을 제외합니다.")
-                st.write(excluded_people[['이 름', '적용에버']])
+                st.write(excluded_people[['이 름', '평균에버']])
                 df_for_teams = attendees.iloc[remainder:].copy()
             else:
                 df_for_teams = attendees.copy()
 
             # 팀 나누기 로직
-            females = df_for_teams[df_for_teams['is_female'] == True].sort_values(by='적용에버', ascending=False)
-            males = df_for_teams[df_for_teams['is_female'] == False].sort_values(by='적용에버', ascending=False)
+            females = df_for_teams[df_for_teams['is_female'] == True].sort_values(by='평균에버', ascending=False)
+            males = df_for_teams[df_for_teams['is_female'] == False].sort_values(by='평균에버', ascending=False)
 
             teams = [{'members': [], 'sum': 0, 'f_count': 0} for _ in range(num_teams)]
 
@@ -70,7 +70,7 @@ if score_file and attend_file:
                 candidate_teams = [t for t in teams if t['f_count'] == min_f]
                 target_team = min(candidate_teams, key=lambda x: x['sum'])
                 target_team['members'].append(row)
-                target_team['sum'] += row['적용에버']
+                target_team['sum'] += row['평균에버']
                 target_team['f_count'] += 1
 
             # 남성 분배
@@ -78,7 +78,7 @@ if score_file and attend_file:
                 candidate_teams = [t for t in teams if len(t['members']) < target_size]
                 target_team = min(candidate_teams, key=lambda x: x['sum'])
                 target_team['members'].append(row)
-                target_team['sum'] += row['적용에버']
+                target_team['sum'] += row['적평균에버']
 
             # 결과 출력
             st.subheader("=== 팀 구성 결과 ===")
@@ -129,4 +129,5 @@ if score_file and attend_file:
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
 else:
+
     st.info("왼쪽 사이드바에서 두 개의 엑셀 파일을 업로드해주세요.")
