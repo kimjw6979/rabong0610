@@ -78,7 +78,7 @@ if score_file and attend_file:
                 candidate_teams = [t for t in teams if len(t['members']) < target_size]
                 target_team = min(candidate_teams, key=lambda x: x['sum'])
                 target_team['members'].append(row)
-                target_team['sum'] += row['적평균에버']
+                target_team['sum'] += row['평균에버']
 
             # 결과 출력
             st.subheader("=== 팀 구성 결과 ===")
@@ -131,3 +131,4 @@ if score_file and attend_file:
 else:
 
     st.info("왼쪽 사이드바에서 두 개의 엑셀 파일을 업로드해주세요.")
+
