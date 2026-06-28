@@ -93,7 +93,7 @@ if score_file and attend_file:
                 target_team['sum'] += row['평균에버']
 
             # 결과 출력
-            st.subheader("=== 팀 구성 결과 ===")
+            st.subheader("=== 팀 구성 결과 ✅ ===")
             cols = st.columns(num_teams)
             for i in range(num_teams):
                 with cols[i]:
