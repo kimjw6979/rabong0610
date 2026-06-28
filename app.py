@@ -3,9 +3,9 @@ import pandas as pd
 import random
 
 # 페이지 설정
-st.set_page_config(page_title="🐻제비뽑곰🎳", layout="wide")
+st.set_page_config(page_title="🐻곰탱이B.C🎳", layout="wide")
 
-st.title("운명의 굴림통: 제비뽑곰🐻🎳")
+st.title("🎳랜덤 핀세팅 : 제비뽑곰🐻🎳")
 st.markdown("엑셀 파일을 업로드하고 팀을 구성하세요.")
 
 # 1. 파일 업로드 (사이드바)
@@ -93,7 +93,7 @@ if score_file and attend_file:
                 target_team['sum'] += row['평균에버']
 
             # 결과 출력
-            st.subheader("=== 🎰 팀 구성 결과 ===")
+            st.subheader("=== 팀 구성 결과 ✅︎ ===")
             cols = st.columns(num_teams)
             for i in range(num_teams):
                 with cols[i]:
