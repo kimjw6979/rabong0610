@@ -5,7 +5,7 @@ import random
 # 페이지 설정
 st.set_page_config(page_title="🐻곰탱이B.C🎳", layout="wide")
 
-st.title("🎳랜덤 핀세팅 : 제비뽑곰🐻🎳")
+st.title("🕹️운명의 매칭: 제비뽑곰🐻🎳")
 st.markdown("엑셀 파일을 업로드하고 팀을 구성하세요.")
 
 # 1. 파일 업로드 (사이드바)
