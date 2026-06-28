@@ -58,9 +58,19 @@ if score_file and attend_file:
             else:
                 df_for_teams = attendees.copy()
 
-            # 팀 나누기 로직
-            females = df_for_teams[df_for_teams['is_female'] == True].sort_values(by='평균에버', ascending=False)
-            males = df_for_teams[df_for_teams['is_female'] == False].sort_values(by='평균에버', ascending=False)
+            # === 팀 밸런스를 유지하며 멤버를 랜덤화하는 함수 ===
+            def get_shuffled_by_tier(df_subset, chunk_size):
+                if df_subset.empty:
+                    return df_subset
+                # 에버리지 내림차순 정렬
+                df_sorted = df_subset.sort_values(by='평균에버', ascending=False)
+                # 팀 개수(chunk_size) 단위로 실력 그룹을 묶어서 그 안에서만 순서를 랜덤 셔플
+                chunks = [df_sorted.iloc[i:i + chunk_size].sample(frac=1) for i in range(0, len(df_sorted), chunk_size)]
+                return pd.concat(chunks)
+            
+            # 실력 구간별로 랜덤하게 섞인 남/여 명단 생성
+            females = get_shuffled_by_tier(df_for_teams[df_for_teams['is_female'] == True], num_teams)
+            males = get_shuffled_by_tier(df_for_teams[df_for_teams['is_female'] == False], num_teams)
 
             teams = [{'members': [], 'sum': 0, 'f_count': 0} for _ in range(num_teams)]
 
@@ -68,6 +78,7 @@ if score_file and attend_file:
             for _, row in females.iterrows():
                 min_f = min(t['f_count'] for t in teams)
                 candidate_teams = [t for t in teams if t['f_count'] == min_f]
+                random.shuffle(candidate_teams) # 팀 점수 합계가 같을 경우 랜덤 배정되도록 후보 팀 셔플
                 target_team = min(candidate_teams, key=lambda x: x['sum'])
                 target_team['members'].append(row)
                 target_team['sum'] += row['평균에버']
@@ -76,6 +87,7 @@ if score_file and attend_file:
             # 남성 분배
             for _, row in males.iterrows():
                 candidate_teams = [t for t in teams if len(t['members']) < target_size]
+                random.shuffle(candidate_teams) # 팀 점수 합계가 같을 경우 랜덤 배정되도록 후보 팀 셔플
                 target_team = min(candidate_teams, key=lambda x: x['sum'])
                 target_team['members'].append(row)
                 target_team['sum'] += row['평균에버']
@@ -96,7 +108,7 @@ if score_file and attend_file:
             num_lanes = 6 if active_count <= 18 else 8
             lanes = [[] for _ in range(num_lanes)]
             
-            # [Case 1 & 2] 레인 배정 로직 (기존 로직 유지)
+            # [Case 1 & 2] 레인 배정 로직
             if num_teams == 2:
                 odd_lane_indices = [idx for idx in range(num_lanes) if idx % 2 == 0]
                 even_lane_indices = [idx for idx in range(num_lanes) if idx % 2 != 0]
@@ -129,6 +141,4 @@ if score_file and attend_file:
     except Exception as e:
         st.error(f"오류가 발생했습니다: {e}")
 else:
-
     st.info("왼쪽 사이드바에서 두 개의 엑셀 파일을 업로드해주세요.")
-
